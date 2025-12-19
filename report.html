@@ -5,16 +5,17 @@
     <title>Indberet Problem</title>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             max-width: 600px;
             margin: auto;
             padding: 20px;
         }
 
-        input, select, textarea {
+        input, textarea {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -49,27 +50,16 @@
     <h2>Indberet et problem i rum {{ roomId }}</h2>
 
     <label>Titel</label>
-    <input v-model="title" placeholder="Kort titel">
+    <input v-model="title">
 
     <label>Beskrivelse</label>
-    <textarea v-model="description" placeholder="Beskriv problemet"></textarea>
+    <textarea v-model="description"></textarea>
 
-    <label>Kategori</label>
-    <select v-model="categoryId">
-        <option disabled value="">Vælg kategori</option>
-        <option value="1">IT</option>
-        <option value="2">Udstyr</option>
-        <option value="3">Rengøring</option>
-        <option value="4">Temperatur</option>
-        <option value="5">Administrativt</option>
-    </select>
-
-    <label>Upload billede (valgfri)</label>
+    <label>Billede (valgfri)</label>
     <input type="file" @change="uploadImage">
-
     <img v-if="imageUrl" :src="imageUrl">
 
-    <label>Din skolemail (@edu.zealand.dk)</label>
+    <label>Skolemail</label>
     <input v-model="email" type="email">
 
     <button @click="submitReport">Send indberetning</button>

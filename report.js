@@ -1,107 +1,59 @@
-const apiBase = "http://localhost:5005";
+const api = "http://localhost:5005";
 
 Vue.createApp({
-    data() {
-        return {
-            roomId: null,
+  data() {
+    return {
+      roomId: new URLSearchParams(location.search).get("room"),
+      title: "",
+      description: "",
+      email: "",
+      imageUrl: "",
+      successMessage: ""
+    };
+  },
 
-            title: "",
-            description: "",
-            categoryId: "",
-            email: "",
+  methods: {
+    async uploadImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-            imageUrl: "",       // Cloudinary URL
-            successMessage: null
-        };
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("upload_preset", "campfeed");
+
+      const r = await fetch(
+        "https://api.cloudinary.com/v1_1/dzppdbkte/image/upload",
+        { method: "POST", body: fd }
+      );
+
+      const json = await r.json();
+      this.imageUrl = json.secure_url;
     },
 
-    mounted() {
-        this.roomId = new URLSearchParams(window.location.search).get("room");
+    async submitReport() {
+      if (!this.email.endsWith("@edu.zealand.dk")) {
+        alert("Brug skolemail");
+        return;
+      }
 
-        if (!this.roomId) {
-            alert("Room mangler i URL (?room=1)");
-        }
-    },
+      const payload = {
+        email: this.email,
+        title: this.title,
+        description: this.description,
+        roomId: Number(this.roomId),
+        imageUrl: this.imageUrl
+        // 🚫 INGEN categoryId
+      };
 
-    methods: {
-        // 🔹 Upload billede direkte til Cloudinary
-        async uploadImage(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+      const res = await axios.post(`${api}/api/report`, payload);
 
-            const fd = new FormData();
-            fd.append("file", file);
-            fd.append("upload_preset", "campfeed");
+      this.successMessage =
+        "Sag oprettet! ID: " + res.data.issueId;
 
-            try {
-                const res = await fetch(
-                    "https://api.cloudinary.com/v1_1/dzppdbkte/image/upload",
-                    {
-                        method: "POST",
-                        body: fd
-                    }
-                );
-
-                const data = await res.json();
-
-                if (!data.secure_url) {
-                    throw new Error("Upload fejlede");
-                }
-
-                this.imageUrl = data.secure_url; // 🔥 VIGTIG
-            } catch (err) {
-                console.error(err);
-                alert("Billed-upload fejlede");
-            }
-        },
-
-        // 🔹 Opret sag
-        async submitReport() {
-            if (!this.email.endsWith("@edu.zealand.dk")) {
-                alert("Brug din skolemail (@edu.zealand.dk)");
-                return;
-            }
-
-            if (!this.title || !this.description || !this.categoryId) {
-                alert("Udfyld alle felter");
-                return;
-            }
-
-            const payload = {
-                email: this.email,
-                title: this.title,
-                description: this.description,
-                roomId: Number(this.roomId),
-                categoryId: Number(this.categoryId),
-                imageUrl: this.imageUrl || null
-            };
-
-            try {
-                const res = await fetch(`${apiBase}/api/report`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!res.ok) throw new Error("API fejl");
-
-                const data = await res.json();
-
-                this.successMessage =
-                    "Tak! Din indberetning er sendt. Sagsnummer: " + data.issueId;
-
-                // reset
-                this.title = "";
-                this.description = "";
-                this.categoryId = "";
-                this.email = "";
-                this.imageUrl = "";
-            } catch (err) {
-                console.error(err);
-                alert("Kunne ikke oprette sag");
-            }
-        }
+      this.title = "";
+      this.description = "";
+      this.email = "";
+      this.imageUrl = "";
     }
+  }
 }).mount("#app");

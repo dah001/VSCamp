@@ -1,30 +1,31 @@
-const apiBase = "http://localhost:5005";
+const api = "http://localhost:5005";
 
 Vue.createApp({
-    data() {
-        return {
-            issues: []
-        };
+  data() {
+    return {
+      issues: []
+    };
+  },
+
+  mounted() {
+    this.load();
+  },
+
+  methods: {
+    async load() {
+      const r = await fetch(`${api}/api/issue`);
+      this.issues = await r.json();
     },
 
-    mounted() {
-        this.fetchIssues();
-    },
+    async save(issue) {
+      await axios.put(`${api}/api/issue/${issue.idissue}`, {
+        status: issue.status,
+        severity: issue.severity,
+        categoryId: issue.categoryId
+      });
 
-    methods: {
-        async fetchIssues() {
-            try {
-                const res = await fetch(`${apiBase}/api/issue`);
-                this.issues = await res.json();
-            } catch (err) {
-                console.error(err);
-                alert("Kunne ikke hente sager");
-            }
-        },
-
-        formatDate(dateStr) {
-            if (!dateStr) return "";
-            return new Date(dateStr).toLocaleString("da-DK");
-        }
+      alert("Gemt i databasen");
+      this.load(); // reload fra DB
     }
+  }
 }).mount("#app");

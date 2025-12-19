@@ -1,92 +1,52 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin – Sager</title>
-
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f7;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .meta {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            background: #eee;
-            margin-top: 10px;
-        }
-
-        img {
-            max-width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Admin – Sager</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
-<div id="app" class="container">
+<div id="app">
+  <h1>Admin – Sager</h1>
 
-    <h1>Admin – Indberettede sager</h1>
+  <div v-for="i in issues" :key="i.idissue" style="border:1px solid #ccc; margin:15px; padding:15px">
+    <h3>{{ i.title }}</h3>
+    <p>{{ i.description }}</p>
 
-    <div v-if="issues.length === 0">
-        Ingen sager fundet…
-    </div>
+    <p>Status:
+      <select v-model="i.status">
+        <option>Ny</option>
+        <option>I gang</option>
+        <option>Lukket</option>
+      </select>
+    </p>
 
-    <div v-for="issue in issues" :key="issue.idissue" class="card">
-        <h2>{{ issue.title }}</h2>
+    <p>Severity:
+      <select v-model="i.severity">
+        <option>Lav</option>
+        <option>Middel</option>
+        <option>Høj</option>
+      </select>
+    </p>
 
-        <p>{{ issue.description }}</p>
+    // dette skal rettes til den rigtige department og sæt de rigtige kategorier ind: og ikke mock data.
 
-        <div class="meta">
-            <div><strong>Issue ID:</strong> {{ issue.idissue }}</div>
-            <div><strong>Room ID:</strong> {{ issue.roomId }}</div>
-            <div><strong>Category ID:</strong> {{ issue.categoryId }}</div>
-            <div><strong>Oprettet:</strong> {{ formatDate(issue.createdAt) }}</div>
-        </div>
+    <p>Kategori:
+      <select v-model="i.categoryId">
+        <option value="1">IT</option>
+        <option value="2">Udstyr</option>
+        <option value="3">Rengøring</option>
+        <option value="5">Administrativt</option>
+      </select>
+    </p>
 
-        <div class="status">
-            Status: {{ issue.status }}
-        </div>
+    <img v-if="i.imageUrl" :src="i.imageUrl" style="max-width:200px">
 
-        <!-- 🔥 BILLEDE -->
-        <div v-if="issue.imageUrl">
-            <img :src="issue.imageUrl" alt="Issue billede">
-        </div>
-    </div>
-
+    <br><br>
+    <button @click="save(i)">💾 Gem ændringer</button>
+  </div>
 </div>
 
 <script src="admin.js"></script>

@@ -11,10 +11,11 @@ Vue.createApp({
     const r = await fetch(`${api}/api/issue`);
     const allIssues = await r.json();
 
+    // 🧹 FILTRERING: KUN RENGØRING
     this.issues = allIssues.filter(
-      i => Number(i.categoryId) === 2
+      i => Number(i.categoryId) === 3
     );
 
-    console.log("UDSTYR ISSUES:", this.issues);
+    console.log(this.issues); // debug
   }
 }).mount("#app");

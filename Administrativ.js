@@ -8,14 +8,31 @@ Vue.createApp({
   },
 
   async mounted() {
-    const r = await fetch(`${api}/api/issue`);
-    const allIssues = await r.json();
+    await this.load();
+  },
 
-    // 🏢 FILTRERING: KUN ADMINISTRATIV
-    this.issues = allIssues.filter(
-      i => Number(i.categoryId) === 5
-    );
+  methods: {
+    async load() {
+      const r = await fetch(`${api}/api/issue`);
+      const allIssues = await r.json();
 
-    console.log(this.issues); // debug
+      // 🏢 KUN ADMINISTRATIV
+      this.issues = allIssues.filter(
+        i => Number(i.categoryId) === 5
+      );
+
+      console.log("ADMINISTRATIVE ISSUES:", this.issues);
+    },
+
+    async save(issue) {
+      await axios.put(`${api}/api/issue/${issue.idissue}`, {
+        status: issue.status,
+        severity: issue.severity,
+        categoryId: issue.categoryId
+      });
+
+      alert("Gemt i databasen");
+      this.load();
+    }
   }
 }).mount("#app");

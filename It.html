@@ -3,25 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <title>IT – Sager</title>
+
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
 <div id="app">
   <h1>IT – Sager</h1>
 
-  <div v-for="i in issues" :key="i.idissue"
+  <div v-for="i in issues"
+       :key="i.idissue"
        style="border:1px solid #ccc; margin:15px; padding:15px">
 
     <h3>{{ i.title }}</h3>
     <p>{{ i.description }}</p>
-    <p>Status: {{ i.status }}</p>
+
+    <p>
+      Status:
+      <select v-model="i.status">
+        <option>Ny</option>
+        <option>I gang</option>
+        <option>Lukket</option>
+      </select>
+    </p>
+
     <p>Severity: {{ i.severity }}</p>
 
-    <img v-if="i.imageUrl" :src="i.imageUrl" style="max-width:200px">
+    <img v-if="i.imageUrl"
+         :src="i.imageUrl"
+         style="max-width:200px">
+
+    <br><br>
+    <button @click="save(i)">💾 Gem ændringer</button>
   </div>
 </div>
 
-<script src="It.js"></script>
+<script src="IT.js"></script>
 </body>
 </html>

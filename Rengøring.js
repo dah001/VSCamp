@@ -8,14 +8,32 @@ Vue.createApp({
   },
 
   async mounted() {
-    const r = await fetch(`${api}/api/issue`);
-    const allIssues = await r.json();
+    await this.load();
+  },
 
-    // 🧹 FILTRERING: KUN RENGØRING
-    this.issues = allIssues.filter(
-      i => Number(i.categoryId) === 3
-    );
+  methods: {
+    async load() {
+      const r = await fetch(`${api}/api/issue`);
+      const allIssues = await r.json();
 
-    console.log(this.issues); // debug
+      // 🧹 KUN RENGØRING
+      this.issues = allIssues.filter(
+        i => Number(i.categoryId) === 3
+      );
+
+      console.log("RENGØRING ISSUES:", this.issues);
+    },
+
+    async save(issue) {
+      await axios.put(`${api}/api/issue/${issue.idissue}`, {
+        status: issue.status,
+        severity: issue.severity,
+        categoryId: issue.categoryId
+      });
+
+      alert("Gemt i databasen");
+
+      this.load(); // reload så UI matcher DB
+    }
   }
 }).mount("#app");

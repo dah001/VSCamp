@@ -15,6 +15,9 @@
     <h3>{{ i.title }}</h3>
     <p>{{ i.description }}</p>
 
+    <!-- NYT: Vis RoomId -->
+    <p><b>RoomId:</b> {{ i.roomId }}</p>
+
     <p>Status:
       <select v-model="i.status">
         <option>Ny</option>
@@ -31,14 +34,13 @@
       </select>
     </p>
 
-    // dette skal rettes til den rigtige department og sæt de rigtige kategorier ind: og ikke mock data.
-
+    <!-- TODO: Skift til rigtige kategorier fra API (se admin.js nedenfor) -->
     <p>Kategori:
-      <select v-model="i.categoryId">
+      <select v-model.number="i.categoryId">
         <option value="1">IT</option>
         <option value="2">Udstyr</option>
         <option value="3">Rengøring</option>
-        <option value="5">Administrativt</option>
+        <option value="5">Administrativ</option>
       </select>
     </p>
 

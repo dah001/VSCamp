@@ -21,4 +21,5 @@ Vue.createApp({
                 });
         }
     }
+
 }).mount("#app");

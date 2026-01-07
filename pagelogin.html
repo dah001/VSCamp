@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu</title>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#f4f4f7;
+      color:#111;
+    }
+    .container{
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+    h1{
+      margin: 0 0 16px;
+      font-size: 28px;
+    }
+    p{
+      margin: 0 0 24px;
+      color: #555;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    @media (max-width: 700px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .card{
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: transform .08s ease, box-shadow .08s ease;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height: 90px;
+      user-select:none;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+    }
+    .title{
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .subtitle{
+      font-size: 13px;
+      color:#666;
+      margin-top: 6px;
+    }
+    .arrow{
+      font-size: 22px;
+      color:#999;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <h1>Vælg kategori</h1>
+    <p>Tryk på en boks for at gå til siden.</p>
+
+    <div class="grid">
+      <div class="card" v-for="item in items" :key="item.title" @click="go(item.href)">
+        <div>
+          <div class="title">{{ item.title }}</div>
+          <div class="subtitle">{{ item.href }}</div>
+        </div>
+        <div class="arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          items: [
+            { title: "Udstyr", href: "udstyr.html" },
+            { title: "IT", href: "it.html" },
+            { title: "rengøring", href: "rengøring.html" },
+            { title: "Administrativ", href: "Adminstrativ.html" }
+          ]
+        };
+      },
+      methods: {
+        go(href) {
+          window.location.href = href;
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>

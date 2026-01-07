@@ -3,7 +3,8 @@ const api = "http://localhost:5005";
 Vue.createApp({
   data() {
     return {
-      issues: []
+      issues: [],
+      filterStatus: "alle" // ✅ matcher v-model i HTML
     };
   },
 
@@ -11,12 +12,23 @@ Vue.createApp({
     await this.load();
   },
 
+  // ✅ matcher filteredIssues i HTML
+  computed: {
+    filteredIssues() {
+      if (this.filterStatus === "alle") {
+        return this.issues;
+      }
+
+      return this.issues.filter(i => i.status === this.filterStatus);
+    }
+  },
+
   methods: {
     async load() {
       const r = await fetch(`${api}/api/issue`);
       const allIssues = await r.json();
 
-      // 🧹 KUN RENGØRING
+      // 🧹 KUN RENGØRING (categoryId = 3)
       this.issues = allIssues.filter(
         i => Number(i.categoryId) === 3
       );
@@ -32,8 +44,7 @@ Vue.createApp({
       });
 
       alert("Gemt i databasen");
-
-      this.load(); // reload så UI matcher DB
+      this.load();
     }
   }
 }).mount("#app");

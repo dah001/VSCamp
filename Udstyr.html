@@ -11,7 +11,20 @@
 <div id="app">
   <h1>Udstyr – Sager</h1>
 
-  <div v-for="i in issues" :key="i.idissue"
+  <!-- ✅ TILFØJET: STATUS-FILTER -->
+  <div style="margin-bottom:20px">
+    <label><b>Filtrer status:</b></label>
+    <select v-model="filterStatus">
+      <option value="alle">Alle</option>
+      <option value="Ny">Ny</option>
+      <option value="I gang">I gang</option>
+      <option value="Lukket">Lukket</option>
+    </select>
+  </div>
+
+  <!-- ❗ BRUGER filteredIssues -->
+  <div v-for="i in filteredIssues"
+       :key="i.idissue"
        style="border:1px solid #ccc; margin:15px; padding:15px">
 
     <h3>{{ i.title }}</h3>
@@ -30,8 +43,8 @@
 
     <img v-if="i.imageUrl" :src="i.imageUrl" style="max-width:200px">
     <br><br>
+
     <button @click="save(i)">💾 Gem ændringer</button>
-    
   </div>
 </div>
 

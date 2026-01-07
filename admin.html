@@ -11,11 +11,21 @@
 <div id="app">
   <h1>Admin – Sager</h1>
 
-  <div v-for="i in issues" :key="i.idissue" style="border:1px solid #ccc; margin:15px; padding:15px">
+  <!-- ✅ STATUS-FILTER (SOM STATUS DROPDOWN) -->
+  <div style="margin-bottom:20px">
+    <label><b>Filtrer status:</b></label>
+    <select v-model="filterStatus">
+      <option value="alle">Alle</option>
+      <option value="Ny">Ny</option>
+      <option value="I gang">I gang</option>
+      <option value="Lukket">Lukket</option>
+    </select>
+  </div>
+
+  <div v-for="i in filteredIssues" :key="i.idissue" style="border:1px solid #ccc; margin:15px; padding:15px">
     <h3>{{ i.title }}</h3>
     <p>{{ i.description }}</p>
 
-    <!-- NYT: Vis RoomId -->
     <p><b>RoomId:</b> {{ i.roomId }}</p>
 
     <p>Status:
@@ -34,7 +44,6 @@
       </select>
     </p>
 
-    <!-- TODO: Skift til rigtige kategorier fra API (se admin.js nedenfor) -->
     <p>Kategori:
       <select v-model.number="i.categoryId">
         <option value="1">IT</option>

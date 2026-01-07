@@ -3,12 +3,24 @@ const api = "http://localhost:5005";
 Vue.createApp({
   data() {
     return {
-      issues: []
+      issues: [],
+      filterStatus: "alle" // ✅ TILFØJET
     };
   },
 
   mounted() {
     this.load();
+  },
+
+  // ✅ TILFØJET (FILTRERING)
+  computed: {
+    filteredIssues() {
+      if (this.filterStatus === "alle") {
+        return this.issues;
+      }
+
+      return this.issues.filter(i => i.status === this.filterStatus);
+    }
   },
 
   methods: {
